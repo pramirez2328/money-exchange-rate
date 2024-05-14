@@ -1,7 +1,8 @@
 import './App.css';
+import Header from './components/header';
 
 function App() {
-  return <p className='text-center text-3xl font-bold underline underline-offset-8'>Hello world!</p>;
+  return <Header />;
 }
 
 export default App;

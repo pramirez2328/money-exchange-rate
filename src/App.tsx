@@ -4,7 +4,7 @@ import Converter from './components/Converter';
 
 function App() {
   return (
-    <div className='bg-slate-200'>
+    <div className=''>
       <Header />
       <Converter />
     </div>

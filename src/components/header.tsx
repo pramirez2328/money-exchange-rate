@@ -1,6 +1,6 @@
 function Header() {
   const date = new Date();
-  const today = date.toISOString().split('T')[0];
+  const today = date.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
     <div className='flex justify-between bg-slate-100 p-6 text-gray-500'>

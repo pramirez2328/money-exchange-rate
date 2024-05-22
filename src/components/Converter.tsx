@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-const apiKey = process.env.REACT_APP_EXCHANGE_RATE_API_KEY;
+const url = import.meta.env.VITE_EXCHANGE_RATE_API_URL;
+const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
 
 function Converter() {
   const [rate, setRate] = useState(0);
   const [currency, setCurrency] = useState({ fromCurrency: 'USD', toCurrency: 'USD', amountFrom: 1, amountTo: 1 });
 
   useEffect(() => {
-    fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/pair/${currency.fromCurrency}/${currency.toCurrency}`)
+    fetch(`${url}/${apiKey}/pair/${currency.fromCurrency}/${currency.toCurrency}`)
       .then((response) => response.json())
       .then((data) => {
         setRate(data.conversion_rate);

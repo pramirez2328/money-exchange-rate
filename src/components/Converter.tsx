@@ -10,7 +10,8 @@ function Converter() {
     fetch(`${url}/${apiKey}/pair/${currency.fromCurrency}/${currency.toCurrency}`)
       .then((response) => response.json())
       .then((data) => {
-        setRate(data.conversion_rate);
+        console.log(data);
+        setRate(currency.amountFrom * data.conversion_rate);
       });
   }, [currency.fromCurrency, currency.toCurrency, currency.amountFrom, currency.amountTo]);
 

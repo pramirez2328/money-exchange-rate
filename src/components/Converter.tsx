@@ -20,7 +20,10 @@ function Converter() {
       });
   }, [currency]);
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>, cond: string) => {
+  const handleOnChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
+    cond: string
+  ) => {
     if (cond === 'fromAmount') {
       setCurrency({ ...currency, amountFrom: +e.target.value });
     } else if (cond === 'fromCurrency') {

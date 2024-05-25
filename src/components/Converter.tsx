@@ -3,17 +3,22 @@ const url = import.meta.env.VITE_EXCHANGE_RATE_API_URL;
 const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
 
 function Converter() {
-  const [rate, setRate] = useState(0);
   const [currency, setCurrency] = useState({ fromCurrency: 'USD', toCurrency: 'USD', amountFrom: 1, amountTo: 1 });
+  const [result, setResult] = useState({ fromCurrency: 'USD', toCurrency: 'USD', amountFrom: 1, amountTo: 1 });
 
   useEffect(() => {
     fetch(`${url}/${apiKey}/pair/${currency.fromCurrency}/${currency.toCurrency}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setRate(currency.amountFrom * data.conversion_rate);
+        setResult({
+          fromCurrency: data.base_code,
+          toCurrency: data.target_code,
+          amountFrom: currency.amountFrom,
+          amountTo: data.conversion_rate * currency.amountFrom,
+        });
       });
-  }, [currency.fromCurrency, currency.toCurrency, currency.amountFrom, currency.amountTo]);
+  }, [currency]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>, cond: string) => {
     if (cond === 'fromAmount') {
@@ -37,7 +42,7 @@ function Converter() {
               type='number'
               className='w-6/12'
               onChange={(e) => handleOnChange(e, 'fromAmount')}
-              value={currency.amountFrom}
+              value={result.amountFrom}
             />
             <span className='mx-2'>|</span>
             <select
@@ -45,7 +50,7 @@ function Converter() {
               id='from'
               className='w-full'
               onChange={(e) => handleOnChange(e, 'fromCurrency')}
-              value={currency.fromCurrency}
+              value={result.fromCurrency}
             >
               <option value='USD'>USD</option>
               <option value='EUR'>EUR</option>
@@ -60,10 +65,16 @@ function Converter() {
               type='number'
               className='w-6/12'
               onChange={(e) => handleOnChange(e, 'toCurrency')}
-              value={currency.amountTo}
+              value={result.amountTo}
             />
             <span className='mx-2'>|</span>
-            <select name='to-currency' id='to' className='w-full' onChange={(e) => handleOnChange(e, 'toAmount')}>
+            <select
+              name='to-currency'
+              id='to'
+              className='w-full'
+              value={result.toCurrency}
+              onChange={(e) => handleOnChange(e, 'toAmount')}
+            >
               <option value='USD'>USD</option>
               <option value='EUR'>EUR</option>
               <option value='GBP'>GBP</option>
@@ -72,9 +83,6 @@ function Converter() {
             </select>
           </div>
         </div>
-      </div>
-      <div>
-        <h2 className='rate-result text-center'>{rate}</h2>
       </div>
     </>
   );

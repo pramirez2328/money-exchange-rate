@@ -2,20 +2,41 @@ import { useState, useEffect } from 'react';
 const url = import.meta.env.VITE_EXCHANGE_RATE_API_URL;
 const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
 
+interface Currency {
+  amountFrom: string;
+  currencyFrom: string;
+  amountTo: string;
+  currencyTo: string;
+  inputFrom?: boolean;
+}
+
 function Converter() {
-  const [currency, setCurrency] = useState({ fromCurrency: 'USD', toCurrency: 'USD', amountFrom: 1, amountTo: 1 });
-  const [result, setResult] = useState({ fromCurrency: 'USD', toCurrency: 'USD', amountFrom: 1, amountTo: 1 });
+  const [currency, setCurrency] = useState<Currency>({
+    currencyFrom: 'USD',
+    currencyTo: 'EUR',
+    amountFrom: '1',
+    amountTo: '1',
+    inputFrom: true,
+  });
+  const [result, setResult] = useState<Currency>({
+    amountFrom: '',
+    currencyFrom: '',
+    amountTo: '',
+    currencyTo: '',
+  });
 
   useEffect(() => {
-    fetch(`${url}/${apiKey}/pair/${currency.fromCurrency}/${currency.toCurrency}`)
+    const apiFrom = currency.inputFrom ? currency.currencyFrom : currency.currencyTo;
+    const apiTo = currency.inputFrom ? currency.currencyTo : currency.currencyFrom;
+
+    fetch(`${url}/${apiKey}/pair/${apiFrom}/${apiTo}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setResult({
-          fromCurrency: data.base_code,
-          toCurrency: data.target_code,
-          amountFrom: currency.amountFrom,
-          amountTo: data.conversion_rate * currency.amountFrom,
+          amountFrom: currency.inputFrom ? currency.amountFrom : (+currency.amountTo * data.conversion_rate).toFixed(2),
+          currencyFrom: currency.currencyFrom,
+          amountTo: currency.inputFrom ? (+currency.amountFrom * data.conversion_rate).toFixed(2) : currency.amountTo,
+          currencyTo: currency.currencyTo,
         });
       });
   }, [currency]);
@@ -24,14 +45,22 @@ function Converter() {
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
     cond: string
   ) => {
-    if (cond === 'fromAmount') {
-      setCurrency({ ...currency, amountFrom: +e.target.value });
-    } else if (cond === 'fromCurrency') {
-      setCurrency({ ...currency, fromCurrency: e.target.value });
-    } else if (cond === 'toCurrency') {
-      setCurrency({ ...currency, amountTo: +e.target.value });
-    } else if (cond === 'toAmount') {
-      setCurrency({ ...currency, toCurrency: e.target.value });
+    if (cond === 'amountFrom') {
+      setCurrency({
+        ...result,
+        amountFrom: e.target.value,
+        inputFrom: true,
+      });
+    } else if (cond === 'currencyFrom') {
+      setCurrency({ ...result, currencyFrom: e.target.value, inputFrom: true });
+    } else if (cond === 'amountTo') {
+      setCurrency({
+        ...result,
+        amountTo: e.target.value,
+        inputFrom: false,
+      });
+    } else if (cond === 'currencyTo') {
+      setCurrency({ ...result, currencyTo: e.target.value, inputFrom: false });
     }
   };
 
@@ -44,7 +73,7 @@ function Converter() {
             <input
               type='number'
               className='w-6/12'
-              onChange={(e) => handleOnChange(e, 'fromAmount')}
+              onChange={(e) => handleOnChange(e, 'amountFrom')}
               value={result.amountFrom}
             />
             <span className='mx-2'>|</span>
@@ -52,11 +81,12 @@ function Converter() {
               name='from-currency'
               id='from'
               className='w-full'
-              onChange={(e) => handleOnChange(e, 'fromCurrency')}
-              value={result.fromCurrency}
+              onChange={(e) => handleOnChange(e, 'currencyFrom')}
+              value={result.currencyFrom}
             >
               <option value='USD'>USD</option>
               <option value='EUR'>EUR</option>
+              <option value='MXN'>MXN</option>
               <option value='GBP'>GBP</option>
               <option value='JPY'>JPY</option>
               <option value='CNY'>CNY</option>
@@ -67,7 +97,7 @@ function Converter() {
             <input
               type='number'
               className='w-6/12'
-              onChange={(e) => handleOnChange(e, 'toCurrency')}
+              onChange={(e) => handleOnChange(e, 'amountTo')}
               value={result.amountTo}
             />
             <span className='mx-2'>|</span>
@@ -75,11 +105,12 @@ function Converter() {
               name='to-currency'
               id='to'
               className='w-full'
-              value={result.toCurrency}
-              onChange={(e) => handleOnChange(e, 'toAmount')}
+              value={result.currencyTo}
+              onChange={(e) => handleOnChange(e, 'currencyTo')}
             >
               <option value='USD'>USD</option>
               <option value='EUR'>EUR</option>
+              <option value='MXN'>MXN</option>
               <option value='GBP'>GBP</option>
               <option value='JPY'>JPY</option>
               <option value='CNY'>CNY</option>

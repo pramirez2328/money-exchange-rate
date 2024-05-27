@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-const url = import.meta.env.VITE_EXCHANGE_RATE_API_URL;
-const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
+import { getRate } from '../api';
 
 interface Currency {
   amountFrom: string;
@@ -12,57 +11,44 @@ interface Currency {
 
 function Converter() {
   const [currency, setCurrency] = useState<Currency>({
-    currencyFrom: 'USD',
-    currencyTo: 'EUR',
     amountFrom: '1',
+    currencyFrom: 'USD',
     amountTo: '1',
+    currencyTo: 'EUR',
     inputFrom: true,
-  });
-  const [result, setResult] = useState<Currency>({
-    amountFrom: '',
-    currencyFrom: '',
-    amountTo: '',
-    currencyTo: '',
   });
 
   useEffect(() => {
-    const apiFrom = currency.inputFrom ? currency.currencyFrom : currency.currencyTo;
-    const apiTo = currency.inputFrom ? currency.currencyTo : currency.currencyFrom;
-
-    fetch(`${url}/${apiKey}/pair/${apiFrom}/${apiTo}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setResult({
-          amountFrom: currency.inputFrom ? currency.amountFrom : (+currency.amountTo * data.conversion_rate).toFixed(2),
-          currencyFrom: currency.currencyFrom,
-          amountTo: currency.inputFrom ? (+currency.amountFrom * data.conversion_rate).toFixed(2) : currency.amountTo,
-          currencyTo: currency.currencyTo,
-        });
-      });
-  }, [currency]);
+    getRate(currency).then((data) => {
+      setCurrency(data);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
     cond: string
   ) => {
     if (cond === 'amountFrom') {
-      setCurrency({
-        ...result,
-        amountFrom: e.target.value,
-        inputFrom: true,
+      getRate({ ...currency, amountFrom: e.target.value, inputFrom: true }).then((data) => {
+        setCurrency(data);
       });
     } else if (cond === 'currencyFrom') {
-      setCurrency({ ...result, currencyFrom: e.target.value, inputFrom: true });
+      getRate({ ...currency, currencyFrom: e.target.value, inputFrom: true }).then((data) => {
+        setCurrency(data);
+      });
     } else if (cond === 'amountTo') {
-      setCurrency({
-        ...result,
-        amountTo: e.target.value,
-        inputFrom: false,
+      getRate({ ...currency, amountTo: e.target.value, inputFrom: false }).then((data) => {
+        setCurrency(data);
       });
     } else if (cond === 'currencyTo') {
-      setCurrency({ ...result, currencyTo: e.target.value, inputFrom: false });
+      getRate({ ...currency, currencyTo: e.target.value, inputFrom: false }).then((data) => {
+        setCurrency(data);
+      });
     }
   };
+
+  console.log(currency);
 
   return (
     <>
@@ -74,7 +60,7 @@ function Converter() {
               type='number'
               className='w-6/12'
               onChange={(e) => handleOnChange(e, 'amountFrom')}
-              value={result.amountFrom}
+              value={currency.amountFrom}
             />
             <span className='mx-2'>|</span>
             <select
@@ -82,7 +68,7 @@ function Converter() {
               id='from'
               className='w-full'
               onChange={(e) => handleOnChange(e, 'currencyFrom')}
-              value={result.currencyFrom}
+              value={currency.currencyFrom}
             >
               <option value='USD'>USD</option>
               <option value='EUR'>EUR</option>
@@ -98,14 +84,14 @@ function Converter() {
               type='number'
               className='w-6/12'
               onChange={(e) => handleOnChange(e, 'amountTo')}
-              value={result.amountTo}
+              value={currency.amountTo}
             />
             <span className='mx-2'>|</span>
             <select
               name='to-currency'
               id='to'
               className='w-full'
-              value={result.currencyTo}
+              value={currency.currencyTo}
               onChange={(e) => handleOnChange(e, 'currencyTo')}
             >
               <option value='USD'>USD</option>

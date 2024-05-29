@@ -53,9 +53,9 @@ function Converter() {
   return (
     <>
       <div className='container  w-11/12 md:w-9/12 rounded-lg mt-12 flex flex-col justify-center '>
-        <h1 className='shadow-2xl mb-4 text-center text-4xl p-4 rounded mb-8'>CONVERSION RATE</h1>
-        <div className='flex w-full justify-between'>
-          <div className='w-5/12 flex border border-stone-500 p-2 rounded'>
+        <h1 className='shadow-2xl mb-4 text-center md:text-4xl p-4 mb-8 rounded-full'>CONVERSION RATE</h1>
+        <div className='flex flex-col md:flex-row w-full justify-between'>
+          <div className='md:w-5/12 flex border border-stone-500 p-2 rounded mb-5 md:mb-0'>
             <input
               type='number'
               className='w-6/12'
@@ -79,7 +79,7 @@ function Converter() {
             </select>
           </div>
 
-          <div className='w-5/12 flex border border-stone-500 p-2 rounded'>
+          <div className='md:w-5/12 flex border border-stone-500 p-2 rounded'>
             <input
               type='number'
               className='w-6/12'

@@ -4,7 +4,7 @@ import Converter from './components/Converter';
 
 function App() {
   return (
-    <div className=''>
+    <div>
       <Header />
       <Converter />
     </div>

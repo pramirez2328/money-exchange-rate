@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-moneyexchangerate-dev-0ddaa-authRole",
+      "UnauthRoleArn": "arn:aws:iam::905418097688:role/amplify-moneyexchangerate-dev-0ddaa-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::905418097688:role/amplify-moneyexchangerate-dev-0ddaa-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-moneyexchangerate-dev-0ddaa-deployment",
+      "UnauthRoleName": "amplify-moneyexchangerate-dev-0ddaa-unauthRole",
+      "StackName": "amplify-moneyexchangerate-dev-0ddaa",
+      "StackId": "arn:aws:cloudformation:us-west-1:905418097688:stack/amplify-moneyexchangerate-dev-0ddaa/d8282220-1e3a-11ef-bba6-06955bf717f1",
+      "AmplifyAppId": "d2wnt0hkftzfiy"
+    }
+  }
+}

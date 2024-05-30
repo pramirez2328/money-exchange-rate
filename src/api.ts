@@ -1,13 +1,6 @@
 const url = import.meta.env.VITE_EXCHANGE_RATE_API_URL;
 const apiKey = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
-
-interface Currency {
-  amountFrom: string;
-  currencyFrom: string;
-  amountTo: string;
-  currencyTo: string;
-  inputFrom?: boolean;
-}
+import { Currency } from './types';
 
 export const getRate = async (currency: Currency) => {
   const apiFrom = currency.inputFrom ? currency.currencyFrom : currency.currencyTo;

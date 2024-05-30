@@ -1,27 +1,22 @@
 import { useState, useEffect } from 'react';
 import { getRate } from '../api';
-
-interface Currency {
-  amountFrom: string;
-  currencyFrom: string;
-  amountTo: string;
-  currencyTo: string;
-  inputFrom?: boolean;
-}
+import { Currency } from '../types';
 
 function Converter() {
   const [currency, setCurrency] = useState<Currency>({
     amountFrom: '1',
     currencyFrom: 'USD',
     amountTo: '1',
-    currencyTo: 'EUR',
+    currencyTo: 'MXN',
     inputFrom: true,
   });
 
   useEffect(() => {
-    getRate(currency).then((data) => {
+    const getData = async () => {
+      const data = await getRate(currency);
       setCurrency(data);
-    });
+    };
+    getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -52,10 +47,10 @@ function Converter() {
 
   return (
     <>
-      <div className='container  w-11/12 md:w-9/12 rounded-lg mt-12 flex flex-col justify-center '>
-        <h1 className='shadow-2xl mb-4 text-center md:text-4xl p-4 mb-8 rounded-full'>CONVERSION RATE</h1>
-        <div className='flex flex-col md:flex-row w-full justify-between'>
-          <div className='md:w-5/12 flex border border-stone-500 p-2 rounded mb-5 md:mb-0'>
+      <div className='container  w-11/12 md:w-9/12 rounded-lg mt-16 flex flex-col justify-center'>
+        <h1 className='shadow-2xl mb-4 text-center text-2xl md:text-4xl p-4 mb-8 rounded-full'>CONVERSION RATE</h1>
+        <div className='flex flex-col md:flex-row w-full justify-between mt-12'>
+          <div className='md:w-5/12 flex border border-stone-500 p-2 rounded mb-10 md:mb-0'>
             <input
               type='number'
               className='w-6/12'

@@ -98,6 +98,9 @@ function Converter() {
               <option value='GBP'>GBP</option>
               <option value='JPY'>JPY</option>
               <option value='CNY'>CNY</option>
+              <option value='INR'>INR</option>
+              <option value='BRL'>BRL</option>
+              <option value='AUD'>AUD</option>
             </select>
           </div>
         </div>
